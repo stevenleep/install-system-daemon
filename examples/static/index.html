@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Daemon</title>
+</head>
+<body>
+    <main>
+        <h1>Test Daemon in the MacOS system</h1>
+        👌
+        <section>
+            <button type="button" id="install">Install Daemon</button>
+        </section>
+    </main>
+</body>
+
+<script>
+    // const sudo = require('sudo-prompt');
+    const {tryGetSudoPermission} = require("./sudo");
+    const installBtn = document.getElementById('install');
+    installBtn.addEventListener('click', () => {
+        tryGetSudoPermission('node ./static/tailscaled.js').then((result) => {
+            console.log(result);
+        });
+
+        // sudo.exec('node ./static/tailscaled.js', {name: 'Daemon'}, (error, stdout, stderr) => {
+        //     if (error) {
+        //         console.log(error);
+        //         return;
+        //     }
+        //     console.log('stdout: ' + stdout);
+        //     console.log('stderr: ' + stderr);
+        // });
+    });
+</script>
+</html>
