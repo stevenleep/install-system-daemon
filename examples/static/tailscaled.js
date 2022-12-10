@@ -1,4 +1,4 @@
-const {tryCreateDaemonPlist, tryUnLoadDaemonPlist , tryStartDaemon, tryLoadDaemonPlist} = require("./daemon");
+const {tryCreateDaemonPlist, tryUnLoadDaemonPlist , tryStartDaemon, tryLoadDaemonPlist, tryStopDaemon} = require("./daemon");
 const {content} = require("./plist");
 const {execSync} = require("child_process");
 const {lib} = require("../config/constant");
@@ -36,18 +36,23 @@ async function start() {
     }
 
     const plist = await tryCreateDaemonPlist(content, tailscaledPlistPath);
-    console.log("plist:", plist);
     if (plist.success) {
-        await tryStartDaemon(tailscaledPackageName);
+        await tryStopDaemon(tailscaledPackageName);
+        // await tryStartDaemon(tailscaledPackageName);
         await tryUnLoadDaemonPlist(tailscaledPlistPath);
 
-        console.log("Tailscale uninstalled successfully");
+        console.log("tailscaled stop and unloaded successfully");
 
         await tryLoadDaemonPlist(tailscaledPlistPath);
         const start = await tryStartDaemon(tailscaledPackageName);
 
+        /**
+         * XXX: The following method is not feasible,
+         *      because TailScaled will withdraw immediately after starting,
+         *      resulting in the unable to get Stdout...
+         */
         if (start.success) {
-            console.log("Tailscale installed successfully");
+            console.log("Tailscaled installed successfully");
         }
     }
 }
